@@ -1,0 +1,50 @@
+---
+version: "3.4"
+
+x-base: &base
+  image: centos/mongodb-36-centos7:1
+  environment:
+    - MONGODB_USER=mongo
+    - MONGODB_PASSWORD=password
+    - MONGODB_DATABASE=mongo
+    - MONGODB_ADMIN_PASSWORD=password
+    - MONGODB_ADMIN_PASSWORD=admin
+  volumes:
+    - ${PWD}/mongod.conf:/etc/mongod.conf
+  # ports:
+  #   - "27018:27017"
+  #   - "28018:28017"
+  expose:
+    - "27017"
+  # entrypoint: [ "/opt/rh/rh-mongodb36/root/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
+
+services:
+  mongo-A:
+    <<: *base
+    hostname: mongoA
+    container_name: ctnMongoA
+    volumes:
+      - db_data1:/var/lib/mongodb/data/
+
+  mongo-B:
+    <<: *base
+    hostname: mongoB
+    container_name: ctnMongoB
+    volumes:
+      - db_data2:/var/lib/mongodb/data/
+
+  mongo-C:
+    <<: *base
+    hostname: mongoC
+    container_name: ctnMongoC
+    volumes:
+      - db_data3:/var/lib/mongodb/data/
+
+  # mongo-client:
+  #   <<: *base
+    # hostname: mongoClient
+
+volumes:
+    db_data1: {}
+    db_data2: {}
+    db_data3: {}
